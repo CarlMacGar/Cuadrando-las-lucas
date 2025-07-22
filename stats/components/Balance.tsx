@@ -121,7 +121,7 @@ export default function Balance() {
       default:
         return {
           title: "Vista",
-          icon: require("../../assets/AppIconCircle.png"),
+          icon: require("../../assets/AppIconCircleTiny.png"),
         };
     }
   };
@@ -142,7 +142,7 @@ export default function Balance() {
       <View style={styles.headerContainer}>
         <View style={styles.contentRow}>
           <Image
-            source={require("../../assets/AppIconCircle.png")}
+            source={require("../../assets/AppIconCircleTiny.png")}
             style={styles.icon}
           />
           <Text style={[styles.headerTitle, { color: colors.yellow }]}>

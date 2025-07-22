@@ -42,7 +42,7 @@ export default function BottomSheet({
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(1)).current;
   const [currentIcon, setCurrentIcon] = useState(
-    require("../assets/AppIconCircle.png")
+    require("../assets/AppIconCircleTiny.png")
   );
 
   // Handle Android back button
@@ -93,7 +93,7 @@ export default function BottomSheet({
       // Cambia el ícono
       setCurrentIcon(
         isOpen
-          ? require("../assets/AppIconCircle.png")
+          ? require("../assets/AppIconCircleTiny.png")
           : require("../assets/ExpensesIcon.png")
       );
 
