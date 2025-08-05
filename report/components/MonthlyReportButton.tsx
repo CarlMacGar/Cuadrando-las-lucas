@@ -21,7 +21,6 @@ export const MonthlyReportButton = () => {
     budget,
     spendings,
     totalSpendings,
-    addGeneratedReports,
     fetchBudget,
     fetchSpendings,
     fetchTotalSpendings,
@@ -80,9 +79,8 @@ export const MonthlyReportButton = () => {
                 budget: budget,
                 spendings: spendings,
               });
-              addGeneratedReports(key);
             } catch (error) {
-              Alert.alert("Error", "Ups, algo falló al generar el reporte.");
+              Alert.alert("Error", `"Ups, algo falló al generar el reporte.\n${error}`);
             }
           },
         },

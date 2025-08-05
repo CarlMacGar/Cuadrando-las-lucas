@@ -5,25 +5,31 @@ import BottomSheet from "../components/BottomSheet";
 import CategoryCard from "../expenses/components/CategoryCard";
 import { MonthlyReportButton } from "../report/components/MonthlyReportButton";
 import { AnnualReportButton } from "../report/components/AnnualReportButton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "../themes/ThemeContext";
 import { useAppStore } from "../stores/AppStore";
+import { annualReportAble, monthlyReportAble } from "../report/services/ReportData";
 
 export default function Home() {
   const colors = useTheme();
+  const [canGenerateMonthlyReport, setCanGenerateMonthlyReport] = useState(false);
+  const [canGenerateAnnualReport, setCanGenerateAnnualReport] = useState(false);
+
   const {
     cardExpanded,
     spendings,
-    canGenerateAnnualReport,
-    canGenerateMonthlyReport,
-    setCanGenerateMonthlyReport,
-    setCanGenerateAnnualReport,
     fetchSpendings,
+    fetchGeneratedReports,
   } = useAppStore();
 
-  const loadSpendings = async () => {
+  const loadData = async () => {
     try {
       await fetchSpendings();
+      await fetchGeneratedReports();
+      const monthlyAble = await monthlyReportAble();
+      const annualAble = await annualReportAble();
+      setCanGenerateMonthlyReport(monthlyAble);
+      setCanGenerateAnnualReport(annualAble);
     } catch (error) {
       console.error("Error loading spendings:", error);
       Alert.alert("Error", "No se pudieron cargar las categorías");
@@ -31,13 +37,11 @@ export default function Home() {
   };
 
   useEffect(() => {
-    loadSpendings();
-    setCanGenerateMonthlyReport();
-    setCanGenerateAnnualReport();
+    loadData();
   }, []);
 
   useEffect(() => {
-    // Show alert if monthly report can be generated
+    // Show alert if monthly report can be generated-
     if (canGenerateMonthlyReport) {
       Alert.alert(
         "Tu cuadre mensual está listo!",
@@ -55,7 +59,7 @@ export default function Home() {
         [{ text: "OK" }]
       );
     }
-  }, [canGenerateMonthlyReport]);
+  }, []);
 
   return (
     <>
@@ -91,7 +95,7 @@ export default function Home() {
           >
             {spendings.map((cat, idx) => (
               <View key={idx} style={{ width: "48%" }}>
-                <CategoryCard data={cat} reload={loadSpendings} />
+                <CategoryCard data={cat} reload={loadData} />
               </View>
             ))}
           </View>

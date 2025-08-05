@@ -1,83 +1,45 @@
 import { create } from "zustand";
 import type { SpendingModel } from "../expenses/models/SpendingModel";
+import { MonthlyReportModel } from "../report/models/MonthlyReportModel";
 import { getBudget } from "../budget/services/BudgetService";
 import {
   getSpendings,
   getTotalSpendings,
 } from "../expenses/services/SpendingService";
-import { getPreviousMonthKey, getAnnualReportKey, getLastDecemberKey } from "../utils/PrevKeys";
+import { getMonthlyData } from "../report/services/ReportData";
 
 type AppStore = {
   budget: number;
   spendings: SpendingModel[];
+  generatedReports: MonthlyReportModel[];
   totalSpendings: number;
   cardExpanded: boolean;
-  canGenerateMonthlyReport: boolean;
-  canGenerateAnnualReport: boolean;
-  generatedReports: Set<string>;
 
   setBudget: (budget: number) => void;
   setSpendings: (spendings: SpendingModel[]) => void;
+  setGeneratedReports: (reports: MonthlyReportModel[]) => void;
   setTotalSpendings: (totalSpendings: number) => void;
   setCardExpanded: (cardExpanded: boolean) => void;
-  setCanGenerateMonthlyReport: () => void;
-  setCanGenerateAnnualReport: () => void; 
-
-  resetReports: () => void;
-  addGeneratedReports: (key: string) => void;
 
   fetchBudget: () => Promise<void>;
   fetchSpendings: () => Promise<void>;
   fetchTotalSpendings: () => Promise<void>;
+  fetchGeneratedReports: () => Promise<void>;
 };
 
 export const useAppStore = create<AppStore>((set, get) => ({
   budget: 0,
   spendings: [],
+  generatedReports: [],
   totalSpendings: 0,
   cardExpanded: false,
-  canGenerateMonthlyReport: false,
-  canGenerateAnnualReport: false,
-  generatedReports: new Set(),
 
   setCardExpanded: (cardExpanded: boolean) => set({ cardExpanded }),
   setBudget: (budget: number) => set({ budget }),
   setSpendings: (spendings: SpendingModel[]) => set({ spendings }),
+  setGeneratedReports: (reports: MonthlyReportModel[]) =>
+    set({ generatedReports: reports }),
   setTotalSpendings: (totalSpendings: number) => set({ totalSpendings }),
-  setCanGenerateMonthlyReport: () => {
-    const today = new Date();
-    const day = today.getDate();
-    const key = getPreviousMonthKey();
-    const alreadyGenerated = get().generatedReports.has(key);
-
-    const withinWindow = day >= 1 && day <= 5;
-    set({ canGenerateMonthlyReport: withinWindow && !alreadyGenerated });
-  },
-  setCanGenerateAnnualReport: () => {
-    const today = new Date();
-    const isJanuary = today.getMonth() === 0;
-    const day = today.getDate();
-
-    const decemberKey = getLastDecemberKey();
-    const annualKey = getAnnualReportKey();
-
-    const alreadyGenerated = get().generatedReports.has(annualKey);
-    const decemberGenerated = get().generatedReports.has(decemberKey);
-
-    const withinWindow = isJanuary && day >= 2 && day <= 6;
-    const canGenerate = withinWindow && decemberGenerated && !alreadyGenerated;
-
-    set({ canGenerateAnnualReport: canGenerate });
-  },
-
-  resetReports: () => {
-    set({ generatedReports: new Set() });
-  },
-  addGeneratedReports: (key: string) => {
-    const current = new Set(get().generatedReports);
-    current.add(key);
-    set({ generatedReports: current });
-  },
 
   fetchBudget: async () => {
     const budget = await getBudget();
@@ -91,4 +53,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const totalSpendings = await getTotalSpendings();
     set({ totalSpendings });
   },
+  fetchGeneratedReports: async () => {
+    const reports = await getMonthlyData();
+    set({ generatedReports: reports });
+  }
 }));

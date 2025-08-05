@@ -3,11 +3,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
   Dimensions,
-  PanResponder,
   BackHandler,
-  Image,
   ScrollView,
 } from "react-native";
 import { useRef, useState, useEffect, useCallback } from "react";
@@ -192,42 +189,6 @@ export default function BottomSheet({
     }
   };
 
-  // Simple pan responder for basic drag functionality
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        return Math.abs(gestureState.dy) > 10;
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        const newValue = isOpen
-          ? openPosition + gestureState.dy
-          : closedPosition + gestureState.dy;
-
-        // Constrain movement
-        if (newValue >= openPosition && newValue <= closedPosition) {
-          translateY.setValue(newValue);
-        }
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        const threshold = screenHeight * 0.3;
-
-        if (isOpen) {
-          if (gestureState.dy > threshold || gestureState.vy > 0.5) {
-            closeSheet();
-          } else {
-            openSheet();
-          }
-        } else {
-          if (gestureState.dy < -threshold || gestureState.vy < -0.5) {
-            openSheet();
-          } else {
-            closeSheet();
-          }
-        }
-      },
-    })
-  ).current;
-
   const rotate = rotateAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
@@ -269,17 +230,12 @@ export default function BottomSheet({
           },
         ]}
       >
-        {/* Handle Bar */}
-        <View style={styles.handleContainer}>
-          <View style={[styles.handle, { backgroundColor: colors.border }]} />
-        </View>
 
         {/* Header */}
         <TouchableOpacity
           onPress={toggleSheet}
           style={styles.header}
           activeOpacity={0.8}
-          {...panResponder.panHandlers}
         >
           <Animated.View
             style={[styles.headerContent, { opacity: headerOpacity }]}

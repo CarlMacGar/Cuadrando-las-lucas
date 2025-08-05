@@ -167,7 +167,7 @@ export async function generateMonthlyReport({
 
   try {
     const { uri } = await Print.printToFileAsync({
-      html,
+      html: html,
       base64: false,
     });
 

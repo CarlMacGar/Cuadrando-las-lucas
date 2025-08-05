@@ -12,13 +12,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { getMonthlyData, clearMonthlyData } from "../services/ReportData";
 import { MonthlyReportModel } from "../models/MonthlyReportModel";
 import { generateAnnualReport } from "../services/pdfReport";
-import { useAppStore } from "../../stores/AppStore";
 import { getAnnualReportKey } from "../../utils/PrevKeys";
+import { saveLastReportYear } from "../services/ReportData";
 
 export const AnnualReportButton = () => {
   const colors = useTheme();
   const [monthlyData, setMonthlyData] = useState<MonthlyReportModel[]>([]);
-  const { addGeneratedReports, resetReports } = useAppStore();
 
   const loadData = async () => {
     try {
@@ -35,6 +34,7 @@ export const AnnualReportButton = () => {
     loadData();
   }, []);
 
+
   const handleGenerateReport = async () => {
     try {
       await clearMonthlyData();
@@ -46,12 +46,10 @@ export const AnnualReportButton = () => {
           {
             text: "Generar",
             onPress: async () => {
-              const key = getAnnualReportKey();
               try {
+                await saveLastReportYear(year-1);
                 await generateAnnualReport(year, monthlyData);
                 await loadData();
-                addGeneratedReports(key);
-                resetReports();
               } catch (error) {
                 Alert.alert("Error", "Ups, algo falló al generar el reporte.");
               }
@@ -79,7 +77,7 @@ export const AnnualReportButton = () => {
             style={styles.icon}
           />
           <Text style={[styles.text, { color: colors.darkText }]}>
-            Tu cuadre de lucas 2025
+            Tu cuadre de lucas {year - 1}
           </Text>
           <Image
             source={require("../../assets/AppIconCircle.png")}

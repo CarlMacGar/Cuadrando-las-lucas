@@ -2,15 +2,15 @@
   "expo": {
     "name": "Cuadrando las Lucas",
     "slug": "cuadrando-las-lucas",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/AppIcon.png",
+    "icon": "./assets/AppScreenIcon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/AppIcon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F3C124"
     },
     "ios": {
       "supportsTablet": true
@@ -18,7 +18,7 @@
     "android": {
       "package": "com.carlmacgar.cuadrandolaslucas",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/AppIcon.png",
+        "foregroundImage": "./assets/AppScreenIcon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
