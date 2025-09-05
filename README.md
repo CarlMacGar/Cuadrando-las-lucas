@@ -39,7 +39,7 @@ Puedes descargar y probar la app directamente aquí (Android APK):
 
 
 <p align="center">
-  <a href="https://expo.dev/artifacts/eas/xhHkDLYgaeyVGnkaYoiuGs.apk">
+  <a href="https://github.com/CarlMacGar/Cuadrando-las-lucas/releases/tag/v0.9.0">
     <img src="https://img.shields.io/badge/📲%20Descargar-APK-yellow?style=for-the-badge" alt="Descargar APK">
   </a>
 </p>
